@@ -9,24 +9,27 @@
 // @todo: Вывести карточки на страницу
 
 const placesContainer = document.querySelector('.places__list');
+const cardTemplate = document.querySelector('#card-template').content;
 
-function addCard(cardTitle, cardLink, removeFunc) {
-	const cardTemplate = document.querySelector('#card-template').content;
+function createCard(cardData, onRemove) {
 	const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
 	const deleteButton = cardElement.querySelector('.card__delete-button');
 
-	cardElement.querySelector('.card__title').textContent = cardTitle;
-	cardElement.querySelector('.card__image').src = cardLink;
+	cardElement.querySelector('.card__title').textContent = cardData.name;
+	cardElement.querySelector('.card__image').src = cardData.link;
+	cardElement.querySelector('.card__image').alt = cardData.name;
 
-	deleteButton.addEventListener('click', removeFunc);
+	const card = cardElement;
+	deleteButton.addEventListener('click', () => removeCard(card));
 
-	placesContainer.append(cardElement);
+	return cardElement
 }
 
-function removeCard(evt) {
-	evt.target.closest('.card').remove();
+function removeCard(card) {
+	card.remove();
 }
 
 initialCards.forEach(function(item) {
-	addCard(item.name, item.link, removeCard);
+	const card = createCard(item, removeCard);
+	placesContainer.append(card);
 })
