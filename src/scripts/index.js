@@ -1,10 +1,9 @@
 import "../pages/index.css";
 import { initialCards } from "./cards";
 import { createCard, removeCard, likeCard, zoomCard } from "./card";
-import { showPopup, handleFormSubmit } from "./modal";
+import { showPopup, closePopup } from "./modal";
 
 const placesContainer = document.querySelector(".places__list");
-const cardTemplate = document.querySelector("#card-template").content;
 
 // загружаем карточки по умолчанию
 initialCards.forEach(function (item) {
@@ -17,6 +16,13 @@ const profileAddButton = document.querySelector(".profile__add-button");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 
+const profilePopup = document.querySelector(".popup_type_edit");
+const popupInputName = profilePopup.querySelector(".popup__input_type_name");
+const popupInputDescription = profilePopup.querySelector(
+  ".popup__input_type_description"
+);
+const cardAddPopup = document.querySelector(".popup_type_new-card");
+
 const addFormElement = document.forms["new-place"];
 const addFormNameInput = addFormElement.elements["place-name"];
 const addFormLinkInput = addFormElement.elements["link"];
@@ -25,16 +31,33 @@ const editFormElement = document.forms["edit-profile"];
 const editFormNameInput = editFormElement.elements["name"];
 const editFormJobInput = editFormElement.elements["description"];
 
+const popups = document.querySelectorAll(".popup");
+
+// объединение обработчиков оверлея и крестиков
+popups.forEach((popup) => {
+  popup.addEventListener("mousedown", (evt) => {
+    if (evt.target.classList.contains("popup_is-opened")) {
+      closePopup(popup); // проверка, нажали на оверлей или нет, и закрытие попапа
+    }
+    if (evt.target.classList.contains("popup__close")) {
+      closePopup(popup); // проверка, нажали на крестик или нет, и закрытие попапа
+    }
+  });
+});
+
 profileEditButton.addEventListener("click", () => {
-  showPopup(".popup_type_edit");
+  popupInputName.value = profileTitle.textContent;
+  popupInputDescription.value = profileDescription.textContent;
+
+  showPopup(profilePopup);
 });
 
 profileAddButton.addEventListener("click", () => {
-  showPopup(".popup_type_new-card");
+  showPopup(cardAddPopup);
 });
 
 // слушатель при редактировании
-editFormElement.addEventListener("submit", handleFormSubmit);
+editFormElement.addEventListener("submit", handleProfileFormSubmit);
 
 // слушатель при добавлении новой карточки
 addFormElement.addEventListener("submit", (event) => {
@@ -50,14 +73,20 @@ addFormElement.addEventListener("submit", (event) => {
   const card = createCard(cardData, removeCard, likeCard, zoomCard); // как и массив карт, добавляем свою карточку к остальным
   placesContainer.prepend(card);
 
-  const openedPopup = event.target.closest(".popup_is-opened"); // закрытие попапа при отправке формы, после сохранения данных
-  openedPopup.classList.remove("popup_is-opened");
+  event.target.reset(); // очистка формы после добавления карточки
+
+  cardAddPopup.classList.remove("popup_is-opened"); // закрытие попапа при отправке формы, после сохранения данных
 });
 
-export {
-  cardTemplate,
-  profileTitle,
-  profileDescription,
-  editFormNameInput,
-  editFormJobInput,
-};
+// Обработчик «отправки» формы
+function handleProfileFormSubmit(event) {
+  event.preventDefault();
+
+  const nameInputText = editFormNameInput.value; // взятие значений из каждого input
+  const jobInputText = editFormJobInput.value;
+
+  profileTitle.textContent = nameInputText; // подстановка текста в инфо профиля
+  profileDescription.textContent = jobInputText;
+
+  profilePopup.classList.remove("popup_is-opened");
+}

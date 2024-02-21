@@ -1,5 +1,9 @@
-import { cardTemplate } from "./index";
 import { showPopup } from "./modal";
+
+const cardTemplate = document.querySelector("#card-template").content;
+const imagePopup = document.querySelector(".popup_type_image");
+const popupImage = imagePopup.querySelector(".popup__image");
+const popupCaption = imagePopup.querySelector(".popup__caption");
 
 function createCard(cardData, onRemove, onLike, onZoom) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
@@ -12,7 +16,7 @@ function createCard(cardData, onRemove, onLike, onZoom) {
   cardImage.alt = cardData.name;
 
   deleteButton.addEventListener("click", () => onRemove(cardElement));
-  cardLikeButton.addEventListener("click", (event) => onLike(event));
+  cardLikeButton.addEventListener("click", onLike);
   cardImage.addEventListener("click", () =>
     onZoom(cardData.link, cardData.name)
   );
@@ -29,7 +33,11 @@ function likeCard(event) {
 }
 
 function zoomCard(cardImage, cardDescription) {
-  showPopup(".popup_type_image", cardImage, cardDescription);
+  popupImage.src = cardImage;
+  popupImage.alt = cardDescription;
+  popupCaption.textContent = cardDescription;
+
+  showPopup(imagePopup);
 }
 
 export { createCard, removeCard, likeCard, zoomCard };
