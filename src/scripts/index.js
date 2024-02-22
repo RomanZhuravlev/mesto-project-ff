@@ -75,7 +75,7 @@ addFormElement.addEventListener("submit", (event) => {
 
   event.target.reset(); // очистка формы после добавления карточки
 
-  cardAddPopup.classList.remove("popup_is-opened"); // закрытие попапа при отправке формы, после сохранения данных
+  closePopup(cardAddPopup); // закрытие попапа при отправке формы, после сохранения данных
 });
 
 // Обработчик «отправки» формы
@@ -88,5 +88,5 @@ function handleProfileFormSubmit(event) {
   profileTitle.textContent = nameInputText; // подстановка текста в инфо профиля
   profileDescription.textContent = jobInputText;
 
-  profilePopup.classList.remove("popup_is-opened");
+  closePopup(profilePopup); // закрытие попапа при отправке формы, после сохранения данных
 }
