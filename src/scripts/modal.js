@@ -1,4 +1,9 @@
-function showPopup(popupToOpen) {
+import { clearValidation } from "./validation";
+
+function showPopup(popupToOpen, validationConfig) {
+	const form = popupToOpen.querySelector('.popup__form');
+  clearValidation(form, validationConfig);
+
   popupToOpen.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEscape);
 }
@@ -15,6 +20,5 @@ function handleEscape(event) {
     closePopup(openedPopup);
   }
 }
-export { showPopup, closePopup };
 
-// большое спасибо ревьюерам за вашу работу! не могу сказать этого лично, но вы очень помогаете и развиваете меня
+export { showPopup, closePopup, handleEscape };
