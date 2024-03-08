@@ -1,5 +1,5 @@
 function showPopup(popupToOpen) {
-	popupToOpen.classList.add("popup_is-opened");
+  popupToOpen.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEscape);
 }
 
