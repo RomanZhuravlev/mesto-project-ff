@@ -1,7 +1,7 @@
 import "../pages/index.css";
-import { createCard, zoomCard } from "./card";
+import { createCard } from "./card";
 import { showPopup, closePopup } from "./modal";
-import { enableValidation } from "./validation";
+import { enableValidation, clearValidation } from "./validation";
 import {
   getUserInfo,
   getCards,
@@ -10,6 +10,8 @@ import {
   deleteCard,
   editAvatar,
 } from "./api";
+
+// отдельные файлы для констант и утилит я сделаю позже, тк это не критически важно на данном этапе
 
 const placesContainer = document.querySelector(".places__list");
 
@@ -24,13 +26,14 @@ const popupInputName = profilePopup.querySelector(".popup__input_type_name");
 const popupInputDescription = profilePopup.querySelector(
   ".popup__input_type_description"
 );
-const profilePopupButton = profilePopup.querySelector(".popup__button");
 
 const cardAddPopup = document.querySelector(".popup_type_new-card");
-const cardAddPopupButton = cardAddPopup.querySelector(".popup__button");
 
 const editAvatarPopup = document.querySelector(".popup_type_edit-avatar");
-const editAvatarPopupButton = editAvatarPopup.querySelector(".popup__button");
+
+const imagePopup = document.querySelector(".popup_type_image");
+const popupImage = imagePopup.querySelector(".popup__image");
+const popupCaption = imagePopup.querySelector(".popup__caption");
 
 const editFormElement = document.forms["edit-profile"];
 const editFormNameInput = editFormElement.elements["name"];
@@ -66,26 +69,38 @@ popups.forEach((popup) => {
   });
 });
 
+function zoomCard(cardImage, cardDescription) {
+  popupImage.src = cardImage;
+  popupImage.alt = cardDescription;
+  popupCaption.textContent = cardDescription;
+
+  showPopup(imagePopup);
+}
+
 profileEditButton.addEventListener("click", () => {
   popupInputName.value = profileTitle.textContent;
   popupInputDescription.value = profileDescription.textContent;
-
-  showPopup(profilePopup, validationConfig);
+  clearValidation(editFormElement, validationConfig);
+  showPopup(profilePopup);
 });
 
 profileAddButton.addEventListener("click", () => {
-  showPopup(cardAddPopup, validationConfig);
+  addFormNameInput.value = "";
+  addFormLinkInput.value = "";
+  clearValidation(addFormElement, validationConfig);
+  showPopup(cardAddPopup);
 });
 
 headerLogo.addEventListener("click", () => {
   editAvatarFormUrlInput.value = "";
-  showPopup(editAvatarPopup, validationConfig);
+  clearValidation(editAvatarFormElement, validationConfig);
+  showPopup(editAvatarPopup);
 });
 
 // слушатель при редактировании
 editFormElement.addEventListener("submit", (event) => {
   event.preventDefault();
-  profilePopupButton.textContent = "Сохранить...";
+  event.submitter.textContent = "Сохранить...";
 
   editProfile(editFormNameInput.value, editFormJobInput.value)
     .then((res) => {
@@ -95,14 +110,14 @@ editFormElement.addEventListener("submit", (event) => {
     })
     .catch((error) => console.log(error))
     .finally(() => {
-      profilePopupButton.textContent = "Сохранить";
+      event.submitter.textContent = "Сохранить";
     });
 });
 
 // слушатель при добавлении новой карточки
 addFormElement.addEventListener("submit", (event) => {
   event.preventDefault();
-  cardAddPopupButton.textContent = "Сохранить...";
+  event.submitter.textContent = "Сохранить...";
 
   addCard(addFormNameInput.value, addFormLinkInput.value)
     .then((res) => {
@@ -119,13 +134,13 @@ addFormElement.addEventListener("submit", (event) => {
     })
     .catch((res) => console.log(res))
     .finally(() => {
-      cardAddPopupButton.textContent = "Сохранить";
+      event.submitter.textContent = "Сохранить";
     });
 });
 
 editAvatarFormElement.addEventListener("submit", (event) => {
   event.preventDefault();
-  editAvatarPopupButton.textContent = "Сохранить...";
+  event.submitter.textContent = "Сохранить...";
 
   editAvatar(editAvatarFormUrlInput.value)
     .then((res) => {
@@ -134,7 +149,7 @@ editAvatarFormElement.addEventListener("submit", (event) => {
     })
     .catch((error) => console.log(error))
     .finally(() => {
-      editAvatarPopupButton.textContent = "Сохранить";
+      event.submitter.textContent = "Сохранить";
     });
 });
 

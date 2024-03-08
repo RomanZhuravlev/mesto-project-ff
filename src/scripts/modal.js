@@ -1,10 +1,5 @@
-import { clearValidation } from "./validation";
-
-function showPopup(popupToOpen, validationConfig) {
-	const form = popupToOpen.querySelector('.popup__form');
-  clearValidation(form, validationConfig);
-
-  popupToOpen.classList.add("popup_is-opened");
+function showPopup(popupToOpen) {
+	popupToOpen.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEscape);
 }
 

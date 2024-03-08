@@ -25,9 +25,7 @@ const hideInputError = (formElement, inputElement, validationConfig) => {
 const checkInputValidity = (formElement, inputElement, validationConfig) => {
   // проверка регулярным выражением
   if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity(
-      "Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
-    );
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   } else {
     inputElement.setCustomValidity("");
   }

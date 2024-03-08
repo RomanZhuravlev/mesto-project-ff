@@ -1,10 +1,6 @@
-import { handleEscape } from "./modal";
 import { toggleLike } from "./api";
 
 const cardTemplate = document.querySelector("#card-template").content;
-const imagePopup = document.querySelector(".popup_type_image");
-const popupImage = imagePopup.querySelector(".popup__image");
-const popupCaption = imagePopup.querySelector(".popup__caption");
 
 function createCard(cardData, myUserId, onRemove, onZoom) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
@@ -68,13 +64,4 @@ function removeCard(card) {
   card.remove();
 }
 
-function zoomCard(cardImage, cardDescription) {
-  popupImage.src = cardImage;
-  popupImage.alt = cardDescription;
-  popupCaption.textContent = cardDescription;
-
-  imagePopup.classList.add("popup_is-opened");
-  document.addEventListener("keydown", handleEscape);
-}
-
-export { createCard, removeCard, zoomCard };
+export { createCard, removeCard };
