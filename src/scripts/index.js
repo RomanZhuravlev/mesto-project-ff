@@ -22,9 +22,6 @@ import {
   popupInputDescription,
   cardAddPopup,
   editAvatarPopup,
-  imagePopup,
-  popupImage,
-  popupCaption,
   editFormElement,
   editFormNameInput,
   editFormJobInput,
@@ -37,7 +34,7 @@ import {
   validationConfig,
 } from "./constants";
 import { zoomCard } from "./utilities";
-
+console.log(profilePopup);
 let myId; // сюда вытащим значение из getUserInfo() для дальнейшего переиспользования
 
 // объединение обработчиков оверлея и крестиков
